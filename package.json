@@ -1,0 +1,31 @@
+{
+  "name": "p2_quiz",
+  "version": "1.0.0",
+  "description": "Practica 2 de CORE",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martingoldthen/P2_Quiz.git"
+  },
+  "author": "Martin Gonzalez Calvo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/martingoldthen/P2_Quiz/issues"
+  },
+  "homepage": "https://github.com/martingoldthen/P2_Quiz#readme",
+  "dependencies": {
+    "chalk": "^2.3.1",
+    "figlet": "^1.2.0",
+    "file-system": "^2.2.2",
+    "readline": "^1.3.0"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "quiz",
+    "core"
+  ]
+}
