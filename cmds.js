@@ -207,6 +207,16 @@ exports.editCmd = (rl, id) => {
  * @param rl Objeto readline usado para implementar el CLI
  */
 exports.testCmd = (rl, id) => {
+    validateId(id)
+        .then(id => models.quiz.findById(id))
+        .then (quiz => {
+            if (!quiz) {
+                throw new Error(`No existe un quiz asociado al id=${id}.`);
+            }})
+        .then (quiz => {
+            
+        }
+     
     if (typeof id === "undefined") {
         errorlog(`Falta el parametro id`);
         rl.prompt();
