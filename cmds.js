@@ -53,7 +53,7 @@ const validateId = id => {
             reject(new Error(`Falta el parametro <id>.`));
         }else{
             id = parseInt(id); //Coger la parte entera y descartar lo demás
-            if (Number.isNan(id)){
+            if (Number.isNaN(id)){
                 reject(new Error(`El parametro <id> no es un numero.`));
             }else{
                 resolve(id);
