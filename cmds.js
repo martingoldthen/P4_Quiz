@@ -222,8 +222,6 @@ exports.testCmd = (rl, id) => {
                         log('Su respuesta es');
                         log('INCORRECTA', 'red');
                     }
-
-                    rl.prompt();
                 })
         })
         .catch(Sequelize.ValidationError, error => {
