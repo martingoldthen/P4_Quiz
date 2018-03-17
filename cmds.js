@@ -219,8 +219,7 @@ exports.testCmd = (rl, id) => {
                         log("Su respuesta es");
                         log('CORRECTA', 'green');
                     } else {
-                        log('Su respuesta es');
-                        log('INCORRECTA', 'red');
+                        log('Su respuesta es incorrecta');
                     }
                 })
         })
