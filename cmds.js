@@ -243,7 +243,7 @@ exports.testCmd = (rl, id) => {
  */
 exports.playCmd = rl => {
     let score = 0;
-    let toBeResolved = model.getAll();
+    let toBeResolved = [];
     const playOne = () => {
         if (toBeResolved.length === 0) {
             log(`CORRECTO - Lleva ${score} aciertos`);
@@ -253,23 +253,39 @@ exports.playCmd = rl => {
             rl.prompt();
         } else {
             let id = (Math.floor((Math.random() * (toBeResolved.length))));
-            const quiz = model.getByIndex(id);
-            rl.question(colorize(quiz.question + "\n", 'red'), answer => {
-                if (answer.trim().toLowerCase() === quiz.answer.toLowerCase()) {
-                    score++;
-                    log(`Correcto - Lleva ${score} aciertos`);
-                    toBeResolved.splice(id, 1);
-                    playOne();
-                } else if (answer.trim().toLowerCase() !== quiz.answer.toLowerCase()) {
-                    log("INCORRECTO.");
-                    log("Fin del examnen. Aciertos:");
-                    biglog(`${score}`, 'magenta');
-                    rl.prompt();
-                }
-            });
+            validateId(id)
+        .
+            then(() => {
+                return quiz = toBeResolved[id];
+            })
+                .then(quiz => {
+                    makeQuestion(rl, `${quiz.question}`)
+                        .then(respuesta => {
+                            if (respuesta.trim().toLowerCase() === quiz.answer.toLowerCase()) {
+                                score++;
+                                log("Su respuesta es");
+                                log('CORRECTA', 'green');
+                                toBeResolved.splice(id, 1);
+
+                            } else if (answer.trim().toLowerCase() !== quiz.answer.toLowerCase()) {
+                                log("INCORRECTO.");
+                                log("Fin del examnen. Aciertos:");
+                                biglog(`${score}`, 'magenta');
+                                rl.prompt();
+                            }
+                        })
+                        .catch(Sequelize.ValidationError, error => {
+                            errorlog('El quiz es erroneo:');
+                            error.errors.forEach(({message}) => errorlog(message));
+                        })
+                        .catch(error => {
+                            errorlog(error.message);
+                        })
+
+                })
         }
+        playOne();
     };
-    playOne();
 };
 
 /**
