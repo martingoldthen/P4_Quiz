@@ -212,34 +212,32 @@ exports.testCmd = (rl, id) => {
         .then (quiz => {
             if (!quiz) {
                 throw new Error(`No existe un quiz asociado al id=${id}.`);
-            }})
-        .then (quiz => {
-            
-        }
-     
-    if (typeof id === "undefined") {
-        errorlog(`Falta el parametro id`);
-        rl.prompt();
-    } else {
-        try {
-            const quiz = model.getByIndex(id);
-            rl.question(colorize(quiz.question + "\n", 'red'), answer => {
-                if (answer.trim().toLowerCase() === quiz.answer.toLowerCase()) {
-                    log("Su respuesta es");
-                    log('CORRECTA', 'green');
+            }
+            return makeQuestion(rl, `${quiz.question}`)
+                .then(respuesta => {
+                    if (respuesta.trim().toLowerCase() === quiz.answer.toLowerCase()) {
+                        log("Su respuesta es");
+                        log('CORRECTA', 'green');
+                    } else {
+                        log('Su respuesta es');
+                        log('INCORRECTA', 'red');
+                    }
+
                     rl.prompt();
-                } else if(answer.trim().toLowerCase() !== quiz.answer.toLowerCase()) {
-                    log("Su respuesta es");
-                    log('INCORRECTA', 'red');
-                    rl.prompt();
-                }
-            });
-        } catch (error) {
+                })
+        })
+        .catch(Sequelize.ValidationError, error => {
+            errorlog('El quiz es erroneo:');
+            error.errors.forEach(({message}) => errorlog(message));
+        })
+        .catch(error => {
             errorlog(error.message);
+        })
+        .then (() => {
             rl.prompt();
-        }
-    }
+        });
 };
+
 
 /**
  * Pregunta los quizzes existentes aleatoriamente
