@@ -201,6 +201,73 @@ exports.editCmd = (rl, id) => {
 };
 
 /**
+ * Prueba un quiz, hace una pregunta del modelo
+ * rl.question es asincrona!!!!
+ * @param id Clave del quiz a probar
+ * @param rl Objeto readline usado para implementar el CLI
+ */
+exports.testCmd = (rl, id) => {
+    if (typeof id === "undefined") {
+        errorlog(`Falta el parametro id`);
+        rl.prompt();
+    } else {
+        try {
+            const quiz = model.getByIndex(id);
+            rl.question(colorize(quiz.question + "\n", 'red'), answer => {
+                if (answer.trim().toLowerCase() === quiz.answer.toLowerCase()) {
+                    log("Su respuesta es");
+                    log('CORRECTA', 'green');
+                    rl.prompt();
+                } else if(answer.trim().toLowerCase() !== quiz.answer.toLowerCase()) {
+                    log("Su respuesta es");
+                    log('INCORRECTA', 'red');
+                    rl.prompt();
+                }
+            });
+        } catch (error) {
+            errorlog(error.message);
+            rl.prompt();
+        }
+    }
+};
+
+/**
+ * Pregunta los quizzes existentes aleatoriamente
+ * Se gana si se contesta a todos correctamente
+ * @param rl Objeto readline usado para implementar el CLI
+ */
+exports.playCmd = rl => {
+    let score = 0;
+    let toBeResolved = model.getAll();
+    const playOne = () => {
+        if (toBeResolved.length === 0) {
+            log(`CORRECTO - Lleva ${score} aciertos`);
+            log("No hay nada más que preguntar.");
+            log("Fin del examen. Aciertos:");
+            biglog(`${score}`, 'magenta');
+            rl.prompt();
+        } else {
+            let id = (Math.floor((Math.random() * (toBeResolved.length))));
+            const quiz = model.getByIndex(id);
+            rl.question(colorize(quiz.question + "\n", 'red'), answer => {
+                if (answer.trim().toLowerCase() === quiz.answer.toLowerCase()) {
+                    score++;
+                    log(`Correcto - Lleva ${score} aciertos`);
+                    toBeResolved.splice(id, 1);
+                    playOne();
+                } else if (answer.trim().toLowerCase() !== quiz.answer.toLowerCase()) {
+                    log("INCORRECTO.");
+                    log("Fin del examnen. Aciertos:");
+                    biglog(`${score}`, 'magenta');
+                    rl.prompt();
+                }
+            });
+        }
+    };
+    playOne();
+};
+
+/**
  * Muestra los autores de la practica
  * Esta simplificado porque el corrector lo pilla mal
  *  @param rl Objeto readline usado para implementar el CLI
