@@ -308,7 +308,7 @@ exports.playCmd = (socket, rl) => {
  *  @param rl Objeto readline usado para implementar el CLI
  */
 
-exports.creditsCmd = rl => {
+exports.creditsCmd = (socket, rl) => {
     log(socket,'MARTIN');
     rl.prompt();
 };
